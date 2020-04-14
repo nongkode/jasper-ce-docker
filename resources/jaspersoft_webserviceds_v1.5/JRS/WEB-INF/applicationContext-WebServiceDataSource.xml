@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+       
+	<bean id="webServiceDataSource" class="com.jaspersoft.jrs.data.webservice.WebServiceDataSourceDefinition">
+		<property name="factory" ref="customDataSourceServiceFactory"/>
+		<property name="name" value="webServiceDataSource"/>
+		<property name="dataAdapterClassName" value="com.jaspersoft.webservice.data.WebServiceDataAdapterImpl"/>
+		<property name="queryExecuterMap">
+			<map>
+				<entry key="webservice" value="com.jaspersoft.webservice.data.query.WebServiceQueryExecuterFactory"/>
+			</map>
+		</property>			
+	</bean>
+	
+	<!--add bundle -->
+    <bean class="com.jaspersoft.jasperserver.api.common.util.spring.GenericBeanUpdater">
+        <property name="definition" ref="addMessageCatalog"/>
+        <property name="value">
+            <list>
+                <value>WEB-INF/bundles/webserviceds</value>
+            </list>
+        </property>
+        <property name="valueType" value="stringList"/>
+    </bean>
+	
+	<!--add query language-->
+	<bean class="com.jaspersoft.jasperserver.api.common.util.spring.GenericBeanUpdater">
+        <property name="definition" ref="addQueryLanguage"/>
+        <property name="value">
+            <list>
+				<!-- Here my new Query language -->
+                <value>WebServiceQuery</value>
+            </list>
+        </property>
+        <property name="valueType" value="stringList"/>
+	</bean>
+	
+	<!-- Support for dynamic addQueryLanguage -->
+	
+	<bean id="addQueryLanguage" class="com.jaspersoft.jasperserver.api.common.util.spring.GenericBeanUpdaterDefinition">
+		<property name="order" value="10"/>
+		<!-- Replace line 49 with the commented line below if you are running Community Edition! -->
+		<!-- 
+		<property name="beanName" value="queryLanguagesCe"/> 
+		-->
+		<property name="beanName" value="queryLanguagesPro"/>
+		<property name="propertyName" value="sourceList"/>
+		<property name="operation" value="append"/>
+	</bean>
+	
+	<!-- These are copied from applicationContext-rest-services.xml -->
+	<bean class="com.jaspersoft.jasperserver.api.common.util.spring.GenericBeanUpdater">
+        <property name="definition" ref="addQueryLanguage"/>
+        <property name="value" ref="queryLanguagesCe"/>
+        <property name="valueType" value="stringList"/>
+	</bean>
+</beans>

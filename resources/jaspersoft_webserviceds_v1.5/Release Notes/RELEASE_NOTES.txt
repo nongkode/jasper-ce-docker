@@ -1,0 +1,5 @@
+WebService Datasource v1.5
+
+* Added Support to JSONQL Language
+* Compatible with JRS 6.3.1+
+
